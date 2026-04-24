@@ -1,118 +1,182 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:csv/csv.dart';
 import 'notification_service.dart';
 
 class DownloadService {
-  /// Download receipt as PDF format (simulated)
-  static void downloadReceipt(
-    BuildContext context, {
+  /// Generates a CSV file from list of maps and shares it
+  static Future<void> _writeAndShareCsv({
+    required BuildContext context,
     required String fileName,
-    required String receiptData,
-  }) {
+    required List<List<String>> csvData,
+  }) async {
     try {
-      Future.delayed(const Duration(milliseconds: 500), () {
-        if (context.mounted) {
-          NotificationService.showSuccess(
-            context,
-            'Receipt downloaded: $fileName.pdf',
-          );
-        }
-      });
+      final csvString = const ListToCsvConverter().convert(csvData);
+      final directory = await getApplicationDocumentsDirectory();
+      final path = '${directory.path}/$fileName';
+      final file = File(path);
+      await file.writeAsString(csvString);
+
+      await Share.shareXFiles(
+        [XFile(path)],
+        text: 'Here is your $fileName',
+      );
+
+      if (context.mounted) {
+        NotificationService.showSuccess(
+          context,
+          'Receipt saved: $fileName',
+        );
+      }
     } catch (e) {
       if (context.mounted) {
         NotificationService.showError(context, 'Download failed: $e');
       }
     }
+  }
+
+  /// Download receipt as a real CSV file
+  static Future<void> downloadReceipt(
+    BuildContext context, {
+    required String fileName,
+    required Map<String, dynamic> receiptData,
+  }) async {
+    final orderId = receiptData['orderId'] ?? 'N/A';
+    final date = receiptData['date'] ?? 'N/A';
+    final cafeteria = receiptData['cafeteria'] ?? 'N/A';
+    final paymentMethod = receiptData['paymentMethod'] ?? 'N/A';
+    final transactionId = receiptData['transactionId'] ?? 'N/A';
+    final amount = receiptData['amount'] ?? 'N/A';
+    final items = receiptData['items'] as List<dynamic>? ?? [];
+
+    final csvData = <List<String>>[
+      ['Canteeno Receipt'],
+      [],
+      ['Order ID', orderId],
+      ['Date', date],
+      ['Cafeteria', cafeteria],
+      ['Payment Method', paymentMethod],
+      ['Transaction ID', transactionId],
+      ['Total Amount', amount],
+      [],
+      ['Item', 'Qty', 'Unit Price', 'Subtotal'],
+      ...items.map((item) {
+        final name = item['name']?.toString() ?? '';
+        final qty = item['qty']?.toString() ?? '';
+        final unit = item['unitPrice']?.toString() ?? '';
+        final sub = item['subtotal']?.toString() ?? '';
+        return [name, qty, unit, sub];
+      }),
+      [],
+      ['Thank you for dining with Canteeno!'],
+    ];
+
+    await _writeAndShareCsv(
+      context: context,
+      fileName: fileName,
+      csvData: csvData,
+    );
+  }
+
+  /// Download transaction history as a real CSV file
+  static Future<void> downloadTransactionHistory(
+    BuildContext context, {
+    required String fileName,
+    required List<Map<String, dynamic>> transactions,
+  }) async {
+    final csvData = <List<String>>[
+      ['Title', 'Date', 'Cafeteria', 'Payment Method', 'Amount'],
+      ...transactions.map((tx) {
+        return [
+          tx['title']?.toString() ?? '',
+          tx['date']?.toString() ?? '',
+          tx['cafeteria']?.toString() ?? '',
+          tx['paymentMethod']?.toString() ?? '',
+          tx['amount']?.toString() ?? '',
+        ];
+      }),
+    ];
+
+    await _writeAndShareCsv(
+      context: context,
+      fileName: fileName,
+      csvData: csvData,
+    );
   }
 
   /// Download menu list
-  static void downloadMenu(
+  static Future<void> downloadMenu(
     BuildContext context, {
     required String fileName,
     required List<Map<String, String>> items,
-  }) {
-    try {
-      Future.delayed(const Duration(milliseconds: 500), () {
-        if (context.mounted) {
-          NotificationService.showSuccess(
-            context,
-            'Menu downloaded: $fileName.csv',
-          );
-        }
-      });
-    } catch (e) {
-      if (context.mounted) {
-        NotificationService.showError(context, 'Download failed: $e');
-      }
-    }
+  }) async {
+    final csvData = <List<String>>[
+      ['Name', 'Category', 'Price', 'Cafeteria', 'Offer'],
+      ...items.map((item) => [
+        item['name'] ?? '',
+        item['category'] ?? '',
+        item['price'] ?? '',
+        item['cafeteria'] ?? '',
+        item['offer'] ?? '',
+      ]),
+    ];
+
+    await _writeAndShareCsv(
+      context: context,
+      fileName: fileName,
+      csvData: csvData,
+    );
   }
 
   /// Download report (sales, revenue, etc.)
-  static void downloadReport(
+  static Future<void> downloadReport(
     BuildContext context, {
     required String fileName,
     required String reportType,
     required Map<String, dynamic> reportData,
-  }) {
-    try {
-      Future.delayed(const Duration(milliseconds: 500), () {
-        if (context.mounted) {
-          NotificationService.showSuccess(
-            context,
-            'Report downloaded: $fileName.csv',
-          );
-        }
-      });
-    } catch (e) {
-      if (context.mounted) {
-        NotificationService.showError(context, 'Download failed: $e');
-      }
-    }
-  }
+  }) async {
+    final csvData = <List<String>>[
+      ['Report Type', reportType],
+      ['Generated', DateTime.now().toIso8601String()],
+      [],
+      ['Key', 'Value'],
+      ...reportData.entries.map((e) => [e.key, e.value.toString()]),
+    ];
 
-  /// Download transaction history
-  static void downloadTransactionHistory(
-    BuildContext context, {
-    required String fileName,
-    required List<Map<String, String>> transactions,
-  }) {
-    try {
-      Future.delayed(const Duration(milliseconds: 500), () {
-        if (context.mounted) {
-          NotificationService.showSuccess(
-            context,
-            'Transaction history downloaded: $fileName.csv',
-          );
-        }
-      });
-    } catch (e) {
-      if (context.mounted) {
-        NotificationService.showError(context, 'Download failed: $e');
-      }
-    }
+    await _writeAndShareCsv(
+      context: context,
+      fileName: fileName,
+      csvData: csvData,
+    );
   }
 
   /// Download order details
-  static void downloadOrder(
+  static Future<void> downloadOrder(
     BuildContext context, {
     required String fileName,
     required String orderId,
     required List<Map<String, String>> items,
     required String totalAmount,
-  }) {
-    try {
-      Future.delayed(const Duration(milliseconds: 500), () {
-        if (context.mounted) {
-          NotificationService.showSuccess(
-            context,
-            'Order downloaded: $fileName.pdf',
-          );
-        }
-      });
-    } catch (e) {
-      if (context.mounted) {
-        NotificationService.showError(context, 'Download failed: $e');
-      }
-    }
+  }) async {
+    final csvData = <List<String>>[
+      ['Order ID', orderId],
+      ['Total Amount', totalAmount],
+      [],
+      ['Item', 'Qty', 'Price'],
+      ...items.map((item) => [
+        item['name'] ?? '',
+        item['qty'] ?? '',
+        item['price'] ?? '',
+      ]),
+    ];
+
+    await _writeAndShareCsv(
+      context: context,
+      fileName: fileName,
+      csvData: csvData,
+    );
   }
 
   /// Show download options dialog
@@ -159,3 +223,4 @@ class DownloadService {
     );
   }
 }
+
