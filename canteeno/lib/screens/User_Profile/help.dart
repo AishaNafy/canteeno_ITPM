@@ -73,3 +73,4 @@ class HelpPage extends StatelessWidget {
     );
   }
 }
+

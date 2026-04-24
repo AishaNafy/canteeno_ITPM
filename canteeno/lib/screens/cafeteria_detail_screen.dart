@@ -38,7 +38,7 @@ class _CafeteriaDetailScreenState extends State<CafeteriaDetailScreen> {
               icon: Container(
                 padding: const EdgeInsets.all(6),
                 decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.2),
+                  color: Colors.black.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: const Icon(Icons.arrow_back, color: Colors.white, size: 20),
@@ -67,8 +67,8 @@ class _CafeteriaDetailScreenState extends State<CafeteriaDetailScreen> {
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                       colors: [
-                        Colors.black.withOpacity(0.3),
-                        const Color(0xFF9B1C1C).withOpacity(0.85),
+                        Colors.black.withValues(alpha: 0.3),
+                        const Color(0xFF9B1C1C).withValues(alpha: 0.85),
                       ],
                     ),
                   ),
@@ -77,7 +77,7 @@ class _CafeteriaDetailScreenState extends State<CafeteriaDetailScreen> {
                     Positioned(
                       right: 20,
                       top: 50,
-                      child: Icon(Icons.restaurant, size: 100, color: Colors.white.withOpacity(0.1)),
+                      child: Icon(Icons.restaurant, size: 100, color: Colors.white.withValues(alpha: 0.1)),
                     ),
                     Positioned(
                       left: 20,
@@ -88,9 +88,9 @@ class _CafeteriaDetailScreenState extends State<CafeteriaDetailScreen> {
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                             decoration: BoxDecoration(
-                              color: Colors.green.withOpacity(0.2),
+                              color: Colors.green.withValues(alpha: 0.2),
                               borderRadius: BorderRadius.circular(20),
-                              border: Border.all(color: Colors.green.withOpacity(0.5)),
+                              border: Border.all(color: Colors.green.withValues(alpha: 0.5)),
                             ),
                             child: const Row(
                               mainAxisSize: MainAxisSize.min,
@@ -104,7 +104,7 @@ class _CafeteriaDetailScreenState extends State<CafeteriaDetailScreen> {
                           const SizedBox(height: 6),
                           Text(
                             "⭐ 4.${widget.cafeteriaIndex + 2}  •  ☕ ${10 + widget.cafeteriaIndex * 5}+ items",
-                            style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 13),
+                            style: TextStyle(color: Colors.white.withValues(alpha: 0.8), fontSize: 13),
                           ),
                         ],
                       ),
@@ -151,7 +151,7 @@ class _CafeteriaDetailScreenState extends State<CafeteriaDetailScreen> {
                     fit: BoxFit.cover,
                   ),
                   boxShadow: [
-                    BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 10, offset: const Offset(0, 4)),
+                    BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 10, offset: const Offset(0, 4)),
                   ],
                 ),
               ),
@@ -194,7 +194,7 @@ class _CafeteriaDetailScreenState extends State<CafeteriaDetailScreen> {
                       color: sel ? const Color(0xFF9B1C1C) : Colors.white,
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(color: sel ? const Color(0xFF9B1C1C) : Colors.grey[300]!),
-                      boxShadow: sel ? [BoxShadow(color: const Color(0xFF9B1C1C).withOpacity(0.3), blurRadius: 8, offset: const Offset(0, 2))] : [],
+                      boxShadow: sel ? [BoxShadow(color: const Color(0xFF9B1C1C).withValues(alpha: 0.3), blurRadius: 8, offset: const Offset(0, 2))] : [],
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
@@ -351,7 +351,7 @@ class _CafeteriaDetailScreenState extends State<CafeteriaDetailScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(14),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 8, offset: const Offset(0, 2))],
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 8, offset: const Offset(0, 2))],
       ),
       child: Padding(
         padding: const EdgeInsets.all(14),
@@ -363,7 +363,7 @@ class _CafeteriaDetailScreenState extends State<CafeteriaDetailScreen> {
               height: 70,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12),
-                color: const Color(0xFF9B1C1C).withOpacity(0.08),
+                color: const Color(0xFF9B1C1C).withValues(alpha: 0.08),
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(12),
@@ -414,7 +414,7 @@ class _CafeteriaDetailScreenState extends State<CafeteriaDetailScreen> {
                     const SizedBox(height: 6),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                      decoration: BoxDecoration(color: Colors.teal.withOpacity(0.1), borderRadius: BorderRadius.circular(6)),
+                      decoration: BoxDecoration(color: Colors.teal.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(6)),
                       child: Text("🔥 ${item.specialOffer}", style: const TextStyle(color: Colors.teal, fontSize: 10, fontWeight: FontWeight.bold)),
                     ),
                   ],
@@ -531,3 +531,4 @@ class _CafeteriaDetailScreenState extends State<CafeteriaDetailScreen> {
     );
   }
 }
+

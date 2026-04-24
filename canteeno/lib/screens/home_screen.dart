@@ -395,3 +395,4 @@ class FoodCard extends StatelessWidget {
     );
   }
 }
+

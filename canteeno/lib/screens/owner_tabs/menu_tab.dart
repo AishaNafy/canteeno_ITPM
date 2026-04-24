@@ -11,7 +11,13 @@ class MenuTab extends StatefulWidget {
 class MenuTabState extends State<MenuTab> {
   String _selectedCategory = "ALL";
   final TextEditingController _searchController = TextEditingController();
-  final List<String> _categories = ["ALL", "BREAKFAST", "LUNCH", "SNACKS", "BEVERAGES"];
+  final List<String> _categories = [
+    "ALL",
+    "BREAKFAST",
+    "LUNCH",
+    "SNACKS",
+    "BEVERAGES"
+  ];
 
   @override
   void dispose() {
@@ -27,8 +33,11 @@ class MenuTabState extends State<MenuTab> {
     return Consumer<FoodProvider>(
       builder: (context, provider, child) {
         var filtered = provider.foodItems.where((item) {
-          bool matchCat = _selectedCategory == "ALL" || item.category.toUpperCase() == _selectedCategory;
-          bool matchSearch = item.name.toLowerCase().contains(_searchController.text.toLowerCase());
+          bool matchCat = _selectedCategory == "ALL" ||
+              item.category.toUpperCase() == _selectedCategory;
+          bool matchSearch = item.name
+              .toLowerCase()
+              .contains(_searchController.text.toLowerCase());
           return matchCat && matchSearch;
         }).toList();
 
@@ -49,14 +58,31 @@ class MenuTabState extends State<MenuTab> {
                     onTap: () => setState(() => _selectedCategory = cat),
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 250),
-                      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 18, vertical: 8),
                       decoration: BoxDecoration(
                         color: sel ? const Color(0xFF008080) : Colors.white,
                         borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: sel ? const Color(0xFF008080) : Colors.grey[300]!),
-                        boxShadow: sel ? [BoxShadow(color: const Color(0xFF008080).withOpacity(0.3), blurRadius: 8, offset: const Offset(0, 2))] : [],
+                        border: Border.all(
+                            color: sel
+                                ? const Color(0xFF008080)
+                                : Colors.grey[300]!),
+                        boxShadow: sel
+                            ? [
+                                BoxShadow(
+                                    color: const Color(0xFF008080)
+                                        .withValues(alpha: 0.3),
+                                    blurRadius: 8,
+                                    offset: const Offset(0, 2))
+                              ]
+                            : [],
                       ),
-                      child: Text(cat, style: TextStyle(color: sel ? Colors.white : Colors.grey[700], fontWeight: sel ? FontWeight.bold : FontWeight.w500, fontSize: 13)),
+                      child: Text(cat,
+                          style: TextStyle(
+                              color: sel ? Colors.white : Colors.grey[700],
+                              fontWeight:
+                                  sel ? FontWeight.bold : FontWeight.w500,
+                              fontSize: 13)),
                     ),
                   );
                 },
@@ -72,13 +98,23 @@ class MenuTabState extends State<MenuTab> {
                 decoration: InputDecoration(
                   hintText: "Search food items...",
                   hintStyle: TextStyle(color: Colors.grey[400], fontSize: 14),
-                  prefixIcon: Icon(Icons.search, color: Colors.grey[400], size: 22),
+                  prefixIcon:
+                      Icon(Icons.search, color: Colors.grey[400], size: 22),
                   suffixIcon: _searchController.text.isNotEmpty
-                      ? IconButton(icon: const Icon(Icons.clear, size: 18), onPressed: () { _searchController.clear(); setState(() {}); })
+                      ? IconButton(
+                          icon: const Icon(Icons.clear, size: 18),
+                          onPressed: () {
+                            _searchController.clear();
+                            setState(() {});
+                          })
                       : null,
-                  filled: true, fillColor: Colors.white,
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
-                  contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
+                  filled: true,
+                  fillColor: Colors.white,
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide.none),
+                  contentPadding:
+                      const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
                 ),
               ),
             ),
@@ -90,18 +126,26 @@ class MenuTabState extends State<MenuTab> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(Icons.no_food_outlined, size: 60, color: Colors.grey[300]),
+                          Icon(Icons.no_food_outlined,
+                              size: 60, color: Colors.grey[300]),
                           const SizedBox(height: 12),
-                          Text("No food items found", style: TextStyle(color: Colors.grey[500], fontSize: 16, fontWeight: FontWeight.w500)),
+                          Text("No food items found",
+                              style: TextStyle(
+                                  color: Colors.grey[500],
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500)),
                           const SizedBox(height: 8),
-                          Text("Tap '+ Add Item' to add a new item", style: TextStyle(color: Colors.grey[400], fontSize: 13)),
+                          Text("Tap '+ Add Item' to add a new item",
+                              style: TextStyle(
+                                  color: Colors.grey[400], fontSize: 13)),
                         ],
                       ),
                     )
                   : ListView.builder(
                       padding: const EdgeInsets.only(bottom: 80),
                       itemCount: filtered.length,
-                      itemBuilder: (context, index) => _buildFoodCard(filtered[index]),
+                      itemBuilder: (context, index) =>
+                          _buildFoodCard(filtered[index]),
                     ),
             ),
           ],
@@ -114,8 +158,14 @@ class MenuTabState extends State<MenuTab> {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
       decoration: BoxDecoration(
-        color: Colors.white, borderRadius: BorderRadius.circular(14),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 8, offset: const Offset(0, 2))],
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
+        boxShadow: [
+          BoxShadow(
+              color: Colors.black.withValues(alpha: 0.04),
+              blurRadius: 8,
+              offset: const Offset(0, 2))
+        ],
       ),
       child: Padding(
         padding: const EdgeInsets.all(12),
@@ -125,11 +175,17 @@ class MenuTabState extends State<MenuTab> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  width: 65, height: 65,
-                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: const Color(0xFF9B1C1C).withOpacity(0.08)),
+                  width: 65,
+                  height: 65,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      color: const Color(0xFF9B1C1C).withValues(alpha: 0.08)),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(12),
-                    child: Image.asset(item.imagePath, fit: BoxFit.cover, errorBuilder: (_, __, ___) => const Icon(Icons.fastfood, color: Color(0xFF9B1C1C), size: 30)),
+                    child: Image.asset(item.imagePath,
+                        fit: BoxFit.cover,
+                        errorBuilder: (_, __, ___) => const Icon(Icons.fastfood,
+                            color: Color(0xFF9B1C1C), size: 30)),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -137,23 +193,46 @@ class MenuTabState extends State<MenuTab> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(item.name, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF1A1A2E))),
+                      Text(item.name,
+                          style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF1A1A2E))),
                       const SizedBox(height: 4),
                       Row(children: [
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                          decoration: BoxDecoration(color: Colors.grey[100], borderRadius: BorderRadius.circular(6)),
-                          child: Text(item.category, style: TextStyle(fontSize: 11, color: Colors.grey[600], fontWeight: FontWeight.w600)),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 2),
+                          decoration: BoxDecoration(
+                              color: Colors.grey[100],
+                              borderRadius: BorderRadius.circular(6)),
+                          child: Text(item.category,
+                              style: TextStyle(
+                                  fontSize: 11,
+                                  color: Colors.grey[600],
+                                  fontWeight: FontWeight.w600)),
                         ),
                         const SizedBox(width: 8),
-                        Text("Rs. ${item.price}", style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Color(0xFF9B1C1C))),
+                        Text("Rs. ${item.price}",
+                            style: const TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF9B1C1C))),
                       ]),
                       if (item.specialOffer != "None") ...[
                         const SizedBox(height: 6),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                          decoration: BoxDecoration(color: const Color(0xFF008080).withOpacity(0.1), borderRadius: BorderRadius.circular(6)),
-                          child: Text("🔥 ${item.specialOffer}", style: const TextStyle(color: Color(0xFF008080), fontSize: 11, fontWeight: FontWeight.bold)),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 3),
+                          decoration: BoxDecoration(
+                              color: const Color(0xFF008080)
+                                  .withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(6)),
+                          child: Text("🔥 ${item.specialOffer}",
+                              style: const TextStyle(
+                                  color: Color(0xFF008080),
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.bold)),
                         ),
                       ],
                     ],
@@ -169,29 +248,48 @@ class MenuTabState extends State<MenuTab> {
                 GestureDetector(
                   onTap: () {
                     StockStatus next;
-                    if (item.stockStatus == StockStatus.inStock) next = StockStatus.limitedStock;
-                    else if (item.stockStatus == StockStatus.limitedStock) next = StockStatus.outOfStock;
-                    else next = StockStatus.inStock;
-                    Provider.of<FoodProvider>(context, listen: false).updateStockStatus(item.id, next);
+                    if (item.stockStatus == StockStatus.inStock)
+                      next = StockStatus.limitedStock;
+                    else if (item.stockStatus == StockStatus.limitedStock)
+                      next = StockStatus.outOfStock;
+                    else
+                      next = StockStatus.inStock;
+                    Provider.of<FoodProvider>(context, listen: false)
+                        .updateStockStatus(item.id, next);
                   },
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                     decoration: BoxDecoration(
-                      color: _stockColor(item.stockStatus).withOpacity(0.1),
+                      color:
+                          _stockColor(item.stockStatus).withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: _stockColor(item.stockStatus).withOpacity(0.3)),
+                      border: Border.all(
+                          color: _stockColor(item.stockStatus)
+                              .withValues(alpha: 0.3)),
                     ),
                     child: Row(mainAxisSize: MainAxisSize.min, children: [
-                      Container(width: 8, height: 8, decoration: BoxDecoration(shape: BoxShape.circle, color: _stockColor(item.stockStatus))),
+                      Container(
+                          width: 8,
+                          height: 8,
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: _stockColor(item.stockStatus))),
                       const SizedBox(width: 6),
-                      Text(_stockText(item.stockStatus), style: TextStyle(color: _stockColor(item.stockStatus), fontSize: 12, fontWeight: FontWeight.bold)),
+                      Text(_stockText(item.stockStatus),
+                          style: TextStyle(
+                              color: _stockColor(item.stockStatus),
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold)),
                     ]),
                   ),
                 ),
                 const Spacer(),
-                _actionBtn(Icons.edit_outlined, const Color(0xFF008080), () => _showAddEditDialog(item: item)),
+                _actionBtn(Icons.edit_outlined, const Color(0xFF008080),
+                    () => _showAddEditDialog(item: item)),
                 const SizedBox(width: 8),
-                _actionBtn(Icons.delete_outline, Colors.red[400]!, () => _showDeleteDialog(item)),
+                _actionBtn(Icons.delete_outline, Colors.red[400]!,
+                    () => _showDeleteDialog(item)),
               ],
             ),
           ],
@@ -202,35 +300,67 @@ class MenuTabState extends State<MenuTab> {
 
   Widget _actionBtn(IconData icon, Color color, VoidCallback onTap) {
     return InkWell(
-      onTap: onTap, borderRadius: BorderRadius.circular(8),
-      child: Container(padding: const EdgeInsets.all(8), decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(8)), child: Icon(icon, size: 18, color: color)),
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(8),
+      child: Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+              color: color.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(8)),
+          child: Icon(icon, size: 18, color: color)),
     );
   }
 
-  String _stockText(StockStatus s) => s == StockStatus.inStock ? "In Stock" : s == StockStatus.limitedStock ? "Limited" : "Out of Stock";
-  Color _stockColor(StockStatus s) => s == StockStatus.inStock ? Colors.green : s == StockStatus.limitedStock ? Colors.orange : Colors.red;
+  String _stockText(StockStatus s) => s == StockStatus.inStock
+      ? "In Stock"
+      : s == StockStatus.limitedStock
+          ? "Limited"
+          : "Out of Stock";
+  Color _stockColor(StockStatus s) => s == StockStatus.inStock
+      ? Colors.green
+      : s == StockStatus.limitedStock
+          ? Colors.orange
+          : Colors.red;
 
   void _showDeleteDialog(FoodItem item) {
-    showDialog(context: context, builder: (ctx) => AlertDialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      title: const Row(children: [Icon(Icons.warning_amber_rounded, color: Colors.red, size: 28), SizedBox(width: 10), Text("Delete Item")]),
-      content: Text("Delete ${item.name}? This cannot be undone."),
-      actions: [
-        TextButton(onPressed: () => Navigator.pop(ctx), child: const Text("Cancel", style: TextStyle(color: Colors.grey))),
-        ElevatedButton(
-          style: ElevatedButton.styleFrom(backgroundColor: Colors.red, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
-          onPressed: () {
-            Provider.of<FoodProvider>(ctx, listen: false).deleteFood(item.id);
-            Navigator.pop(ctx);
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text("${item.name} deleted"), backgroundColor: Colors.red,
-              behavior: SnackBarBehavior.floating, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+    showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16)),
+              title: const Row(children: [
+                Icon(Icons.warning_amber_rounded, color: Colors.red, size: 28),
+                SizedBox(width: 10),
+                Text("Delete Item")
+              ]),
+              content: Text("Delete ${item.name}? This cannot be undone."),
+              actions: [
+                TextButton(
+                    onPressed: () => Navigator.pop(ctx),
+                    child: const Text("Cancel",
+                        style: TextStyle(color: Colors.grey))),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8))),
+                  onPressed: () {
+                    Provider.of<FoodProvider>(ctx, listen: false)
+                        .deleteFood(item.id);
+                    Navigator.pop(ctx);
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text("${item.name} deleted"),
+                      backgroundColor: Colors.red,
+                      behavior: SnackBarBehavior.floating,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8)),
+                    ));
+                  },
+                  child: const Text("Delete",
+                      style: TextStyle(color: Colors.white)),
+                ),
+              ],
             ));
-          },
-          child: const Text("Delete", style: TextStyle(color: Colors.white)),
-        ),
-      ],
-    ));
   }
 
   /// ─── ADD / EDIT FORM WITH VALIDATIONS ───
@@ -250,8 +380,10 @@ class MenuTabState extends State<MenuTab> {
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, setS) {
           return Container(
-            constraints: BoxConstraints(maxHeight: MediaQuery.of(ctx).size.height * 0.9),
-            padding: EdgeInsets.only(bottom: MediaQuery.of(ctx).viewInsets.bottom),
+            constraints:
+                BoxConstraints(maxHeight: MediaQuery.of(ctx).size.height * 0.9),
+            padding:
+                EdgeInsets.only(bottom: MediaQuery.of(ctx).viewInsets.bottom),
             decoration: const BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
@@ -266,18 +398,37 @@ class MenuTabState extends State<MenuTab> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       /// Handle bar
-                      Center(child: Container(width: 40, height: 4, decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(2)))),
+                      Center(
+                          child: Container(
+                              width: 40,
+                              height: 4,
+                              decoration: BoxDecoration(
+                                  color: Colors.grey[300],
+                                  borderRadius: BorderRadius.circular(2)))),
                       const SizedBox(height: 16),
 
                       /// Title with icon
                       Row(children: [
-                        Icon(item == null ? Icons.add_circle_outline : Icons.edit_outlined, color: const Color(0xFF008080), size: 28),
+                        Icon(
+                            item == null
+                                ? Icons.add_circle_outline
+                                : Icons.edit_outlined,
+                            color: const Color(0xFF008080),
+                            size: 28),
                         const SizedBox(width: 10),
-                        Text(item == null ? "Add New Item" : "Edit Item", style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Color(0xFF1A1A2E))),
+                        Text(item == null ? "Add New Item" : "Edit Item",
+                            style: const TextStyle(
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF1A1A2E))),
                       ]),
                       const SizedBox(height: 6),
-                      Text(item == null ? "Fill in the details to add a new food item" : "Update the food item details",
-                          style: TextStyle(color: Colors.grey[500], fontSize: 13)),
+                      Text(
+                          item == null
+                              ? "Fill in the details to add a new food item"
+                              : "Update the food item details",
+                          style:
+                              TextStyle(color: Colors.grey[500], fontSize: 13)),
                       const SizedBox(height: 24),
 
                       /// Item Name
@@ -285,10 +436,15 @@ class MenuTabState extends State<MenuTab> {
                       const SizedBox(height: 6),
                       TextFormField(
                         controller: nameCtrl,
-                        decoration: _inputDeco("e.g. Spicy Chicken Wrap", Icons.fastfood_outlined),
+                        decoration: _inputDeco(
+                            "e.g. Spicy Chicken Wrap", Icons.fastfood_outlined),
                         validator: (v) {
-                          if (v == null || v.trim().isEmpty) return "Item name is required";
-                          if (v.trim().length < 2) return "Name must be at least 2 characters";
+                          if (v == null || v.trim().isEmpty) {
+                            return "Item name is required";
+                          }
+                          if (v.trim().length < 2) {
+                            return "Name must be at least 2 characters";
+                          }
                           return null;
                         },
                       ),
@@ -302,9 +458,12 @@ class MenuTabState extends State<MenuTab> {
                         keyboardType: TextInputType.number,
                         decoration: _inputDeco("e.g. 850", Icons.attach_money),
                         validator: (v) {
-                          if (v == null || v.trim().isEmpty) return "Price is required";
-                          if (double.tryParse(v.trim()) == null) return "Enter a valid number";
-                          if (double.parse(v.trim()) <= 0) return "Price must be greater than 0";
+                          if (v == null || v.trim().isEmpty)
+                            return "Price is required";
+                          if (double.tryParse(v.trim()) == null)
+                            return "Enter a valid number";
+                          if (double.parse(v.trim()) <= 0)
+                            return "Price must be greater than 0";
                           return null;
                         },
                       ),
@@ -314,17 +473,23 @@ class MenuTabState extends State<MenuTab> {
                       _formLabel("Category *"),
                       const SizedBox(height: 6),
                       Container(
-                        decoration: BoxDecoration(color: const Color(0xFFF5F5F5), borderRadius: BorderRadius.circular(12)),
+                        decoration: BoxDecoration(
+                            color: const Color(0xFFF5F5F5),
+                            borderRadius: BorderRadius.circular(12)),
                         padding: const EdgeInsets.symmetric(horizontal: 12),
                         child: DropdownButtonFormField<String>(
                           value: category,
-                          decoration: const InputDecoration(border: InputBorder.none),
-                          icon: const Icon(Icons.keyboard_arrow_down, color: Color(0xFF008080)),
+                          decoration:
+                              const InputDecoration(border: InputBorder.none),
+                          icon: const Icon(Icons.keyboard_arrow_down,
+                              color: Color(0xFF008080)),
                           items: ["Breakfast", "Lunch", "Snacks", "Beverages"]
-                              .map((c) => DropdownMenuItem(value: c, child: Text(c)))
+                              .map((c) =>
+                                  DropdownMenuItem(value: c, child: Text(c)))
                               .toList(),
                           onChanged: (v) => setS(() => category = v!),
-                          validator: (v) => v == null ? "Select a category" : null,
+                          validator: (v) =>
+                              v == null ? "Select a category" : null,
                         ),
                       ),
                       const SizedBox(height: 16),
@@ -334,9 +499,11 @@ class MenuTabState extends State<MenuTab> {
                       const SizedBox(height: 6),
                       TextFormField(
                         controller: cafCtrl,
-                        decoration: _inputDeco("e.g. Cafeteria 1", Icons.store_outlined),
+                        decoration: _inputDeco(
+                            "e.g. Cafeteria 1", Icons.store_outlined),
                         validator: (v) {
-                          if (v == null || v.trim().isEmpty) return "Cafeteria name is required";
+                          if (v == null || v.trim().isEmpty)
+                            return "Cafeteria name is required";
                           return null;
                         },
                       ),
@@ -347,7 +514,8 @@ class MenuTabState extends State<MenuTab> {
                       const SizedBox(height: 6),
                       TextFormField(
                         controller: offerCtrl,
-                        decoration: _inputDeco("e.g. Buy 1 Get 1 (Fridays)", Icons.local_offer_outlined),
+                        decoration: _inputDeco("e.g. Buy 1 Get 1 (Fridays)",
+                            Icons.local_offer_outlined),
                       ),
                       const SizedBox(height: 16),
 
@@ -355,33 +523,58 @@ class MenuTabState extends State<MenuTab> {
                       _formLabel("Availability"),
                       const SizedBox(height: 8),
                       Row(children: [
-                        _chip("In Stock", StockStatus.inStock, stock, Colors.green, () => setS(() => stock = StockStatus.inStock)),
+                        _chip(
+                            "In Stock",
+                            StockStatus.inStock,
+                            stock,
+                            Colors.green,
+                            () => setS(() => stock = StockStatus.inStock)),
                         const SizedBox(width: 8),
-                        _chip("Limited", StockStatus.limitedStock, stock, Colors.orange, () => setS(() => stock = StockStatus.limitedStock)),
+                        _chip(
+                            "Limited",
+                            StockStatus.limitedStock,
+                            stock,
+                            Colors.orange,
+                            () => setS(() => stock = StockStatus.limitedStock)),
                         const SizedBox(width: 8),
-                        _chip("Out of Stock", StockStatus.outOfStock, stock, Colors.red, () => setS(() => stock = StockStatus.outOfStock)),
+                        _chip(
+                            "Out of Stock",
+                            StockStatus.outOfStock,
+                            stock,
+                            Colors.red,
+                            () => setS(() => stock = StockStatus.outOfStock)),
                       ]),
                       const SizedBox(height: 28),
 
                       /// Submit Button
                       SizedBox(
-                        width: double.infinity, height: 52,
+                        width: double.infinity,
+                        height: 52,
                         child: ElevatedButton.icon(
-                          icon: Icon(item == null ? Icons.add : Icons.save, color: Colors.white, size: 20),
+                          icon: Icon(item == null ? Icons.add : Icons.save,
+                              color: Colors.white, size: 20),
                           label: Text(
                             item == null ? "ADD ITEM" : "SAVE CHANGES",
-                            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16, letterSpacing: 1),
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                                letterSpacing: 1),
                           ),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFF008080),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12)),
                             elevation: 0,
                           ),
                           onPressed: () {
                             if (!formKey.currentState!.validate()) return;
 
-                            final p = Provider.of<FoodProvider>(ctx, listen: false);
-                            String offer = offerCtrl.text.trim().isEmpty ? "None" : offerCtrl.text.trim();
+                            final p =
+                                Provider.of<FoodProvider>(ctx, listen: false);
+                            String offer = offerCtrl.text.trim().isEmpty
+                                ? "None"
+                                : offerCtrl.text.trim();
 
                             if (item == null) {
                               p.addFood(
@@ -393,7 +586,8 @@ class MenuTabState extends State<MenuTab> {
                                 stockStatus: stock,
                               );
                             } else {
-                              p.updateFood(item.id,
+                              p.updateFood(
+                                item.id,
                                 name: nameCtrl.text.trim(),
                                 price: priceCtrl.text.trim(),
                                 category: category,
@@ -405,13 +599,17 @@ class MenuTabState extends State<MenuTab> {
                             Navigator.pop(ctx);
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                               content: Row(children: [
-                                const Icon(Icons.check_circle, color: Colors.white, size: 20),
+                                const Icon(Icons.check_circle,
+                                    color: Colors.white, size: 20),
                                 const SizedBox(width: 10),
-                                Text(item == null ? "${nameCtrl.text} added successfully!" : "${nameCtrl.text} updated!"),
+                                Text(item == null
+                                    ? "${nameCtrl.text} added successfully!"
+                                    : "${nameCtrl.text} updated!"),
                               ]),
                               backgroundColor: const Color(0xFF008080),
                               behavior: SnackBarBehavior.floating,
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10)),
                             ));
                           },
                         ),
@@ -420,14 +618,20 @@ class MenuTabState extends State<MenuTab> {
 
                       /// Cancel Button
                       SizedBox(
-                        width: double.infinity, height: 48,
+                        width: double.infinity,
+                        height: 48,
                         child: OutlinedButton(
                           onPressed: () => Navigator.pop(ctx),
                           style: OutlinedButton.styleFrom(
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12)),
                             side: BorderSide(color: Colors.grey[300]!),
                           ),
-                          child: const Text("CANCEL", style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w600, letterSpacing: 1)),
+                          child: const Text("CANCEL",
+                              style: TextStyle(
+                                  color: Colors.grey,
+                                  fontWeight: FontWeight.w600,
+                                  letterSpacing: 1)),
                         ),
                       ),
                       const SizedBox(height: 8),
@@ -443,7 +647,11 @@ class MenuTabState extends State<MenuTab> {
   }
 
   Widget _formLabel(String text) {
-    return Text(text, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Color(0xFF555555)));
+    return Text(text,
+        style: const TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.w600,
+            color: Color(0xFF555555)));
   }
 
   InputDecoration _inputDeco(String hint, IconData icon) {
@@ -453,28 +661,43 @@ class MenuTabState extends State<MenuTab> {
       prefixIcon: Icon(icon, color: const Color(0xFF008080), size: 20),
       filled: true,
       fillColor: const Color(0xFFF5F5F5),
-      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
-      focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: Color(0xFF008080), width: 1.5)),
-      errorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: Colors.red, width: 1)),
-      focusedErrorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: Colors.red, width: 1.5)),
+      border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+      focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Color(0xFF008080), width: 1.5)),
+      errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Colors.red, width: 1)),
+      focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Colors.red, width: 1.5)),
       errorStyle: const TextStyle(fontSize: 12),
       contentPadding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
     );
   }
 
-  Widget _chip(String label, StockStatus s, StockStatus cur, Color color, VoidCallback onTap) {
+  Widget _chip(String label, StockStatus s, StockStatus cur, Color color,
+      VoidCallback onTap) {
     bool sel = cur == s;
-    return Expanded(child: GestureDetector(
+    return Expanded(
+        child: GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(vertical: 10),
         decoration: BoxDecoration(
-          color: sel ? color.withOpacity(0.15) : Colors.grey[100],
+          color: sel ? color.withValues(alpha: 0.15) : Colors.grey[100],
           borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: sel ? color : Colors.grey[300]!, width: sel ? 1.5 : 1),
+          border: Border.all(
+              color: sel ? color : Colors.grey[300]!, width: sel ? 1.5 : 1),
         ),
-        child: Center(child: Text(label, style: TextStyle(color: sel ? color : Colors.grey[500], fontWeight: sel ? FontWeight.bold : FontWeight.normal, fontSize: 12))),
+        child: Center(
+            child: Text(label,
+                style: TextStyle(
+                    color: sel ? color : Colors.grey[500],
+                    fontWeight: sel ? FontWeight.bold : FontWeight.normal,
+                    fontSize: 12))),
       ),
     ));
   }

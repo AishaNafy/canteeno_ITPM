@@ -127,7 +127,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
         decoration: BoxDecoration(
           color: Colors.white,
           boxShadow: [
-            BoxShadow(color: Colors.black.withOpacity(0.08), blurRadius: 12, offset: const Offset(0, -2)),
+            BoxShadow(color: Colors.black.withValues(alpha: 0.08), blurRadius: 12, offset: const Offset(0, -2)),
           ],
         ),
         child: SafeArea(
@@ -158,7 +158,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
           vertical: 8,
         ),
         decoration: BoxDecoration(
-          color: isActive ? const Color(0xFF9B1C1C).withOpacity(0.1) : Colors.transparent,
+          color: isActive ? const Color(0xFF9B1C1C).withValues(alpha: 0.1) : Colors.transparent,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Row(

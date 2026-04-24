@@ -100,7 +100,7 @@ class OwnerManageStaffScreen extends StatelessWidget {
             tileColor: Colors.grey[50],
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12), side: BorderSide(color: Colors.grey[200]!)),
             leading: CircleAvatar(
-              backgroundColor: const Color(0xFF008080).withOpacity(0.1),
+              backgroundColor: const Color(0xFF008080).withValues(alpha: 0.1),
               child: const Icon(Icons.person, color: Color(0xFF008080)),
             ),
             title: Text(names[index], style: const TextStyle(fontWeight: FontWeight.bold)),
@@ -193,7 +193,7 @@ class BankAccountsScreen extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
-                    color: Colors.green.withOpacity(0.1),
+                    color: Colors.green.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: const Text("Primary", style: TextStyle(color: Colors.green, fontSize: 12, fontWeight: FontWeight.bold)),
@@ -339,3 +339,4 @@ class OwnerSupportScreen extends StatelessWidget {
     );
   }
 }
+

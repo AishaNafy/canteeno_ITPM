@@ -277,3 +277,4 @@ class _FoodDetailScreenState extends State<FoodDetailScreen> {
     );
   }
 }
+

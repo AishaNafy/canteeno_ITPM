@@ -170,7 +170,7 @@ class _StaffManageTabState extends State<StaffManageTab> {
                   child: ListTile(
                     contentPadding: const EdgeInsets.all(16),
                     leading: CircleAvatar(
-                      backgroundColor: isActive ? Colors.green.withOpacity(0.2) : Colors.red.withOpacity(0.2),
+                      backgroundColor: isActive ? Colors.green.withValues(alpha: 0.2) : Colors.red.withValues(alpha: 0.2),
                       child: Icon(Icons.person, color: isActive ? Colors.green : Colors.red),
                     ),
                     title: Text(staff['name'], style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
@@ -215,3 +215,4 @@ class _StaffManageTabState extends State<StaffManageTab> {
     );
   }
 }
+
