@@ -15,6 +15,14 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
+  final TextEditingController _searchController = TextEditingController();
+  String _searchQuery = '';
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -141,6 +149,79 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
 
+              // 🔴 SEARCH BAR
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: TextField(
+                  controller: _searchController,
+                  onChanged: (value) {
+                    setState(() {
+                      _searchQuery = value.toLowerCase();
+                    });
+                  },
+                  decoration: InputDecoration(
+                    hintText: "Search food, category...",
+                    hintStyle: TextStyle(color: Colors.grey[400], fontSize: 14),
+                    prefixIcon: const Icon(Icons.search, color: Color(0xFF9B1C1C)),
+                    suffixIcon: _searchController.text.isNotEmpty
+                        ? IconButton(
+                            icon: const Icon(Icons.clear, size: 18),
+                            onPressed: () {
+                              _searchController.clear();
+                              setState(() => _searchQuery = '');
+                            },
+                          )
+                        : null,
+                    filled: true,
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                      borderSide: BorderSide.none,
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 15),
+
+              // 🔴 HOME DASHBOARD CARDS
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: _dashboardCard(
+                        icon: Icons.restaurant_menu,
+                        label: "Total Orders",
+                        value: "12",
+                        color: const Color(0xFF9B1C1C),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: _dashboardCard(
+                        icon: Icons.account_balance_wallet,
+                        label: "Wallet",
+                        value: "Rs. 500",
+                        color: Colors.green,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: _dashboardCard(
+                        icon: Icons.star,
+                        label: "Points",
+                        value: "120",
+                        color: Colors.amber[700]!,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 15),
+
               // 🔴 WELCOME BANNER
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -234,7 +315,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 padding: const EdgeInsets.all(16),
                 child: Consumer<FoodProvider>(
                   builder: (context, provider, child) {
-                    final items = provider.availableFoodItems;
+                    final items = provider.availableFoodItems.where((item) {
+                      final query = _searchQuery;
+                      return query.isEmpty ||
+                          item.name.toLowerCase().contains(query) ||
+                          item.category.toLowerCase().contains(query) ||
+                          item.cafeteria.toLowerCase().contains(query);
+                    }).toList();
                     if (items.isEmpty) {
                       return const Center(child: Text("No items available today."));
                     }
@@ -255,6 +342,42 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  // 🔴 DASHBOARD CARD WIDGET
+  Widget _dashboardCard({
+    required IconData icon,
+    required String label,
+    required String value,
+    required Color color,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: color.withValues(alpha: 0.2)),
+      ),
+      child: Column(
+        children: [
+          Icon(icon, color: color, size: 24),
+          const SizedBox(height: 8),
+          Text(
+            value,
+            style: TextStyle(
+              color: color,
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: TextStyle(color: Colors.grey[600], fontSize: 11),
+          ),
+        ],
       ),
     );
   }

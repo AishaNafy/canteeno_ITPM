@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import '../utils/download_service.dart';
 
 class ProfileSubScreen extends StatelessWidget {
   final String title;
@@ -180,8 +180,89 @@ class PaymentMethodsScreen extends StatelessWidget {
 }
 
 /// ─── PAYMENT HISTORY ───
-class PaymentHistoryScreen extends StatelessWidget {
+class PaymentHistoryScreen extends StatefulWidget {
   const PaymentHistoryScreen({super.key});
+
+  @override
+  State<PaymentHistoryScreen> createState() => _PaymentHistoryScreenState();
+}
+
+class _PaymentHistoryScreenState extends State<PaymentHistoryScreen> {
+  final List<Map<String, dynamic>> _payments = [
+    {
+      "title": "Food Purchase",
+      "date": "24 March 2026",
+      "time": "12:45 PM",
+      "amount": "- Rs. 450",
+      "isDebit": true,
+      "orderId": "#1234",
+      "cafeteria": "Cafeteria 2",
+      "paymentMethod": "Canteeno Wallet",
+      "transactionId": "TXN-001",
+      "items": [
+        {"name": "Chicken & Rice", "qty": "1", "unitPrice": "Rs. 350", "subtotal": "Rs. 350"},
+        {"name": "Soft Drink", "qty": "1", "unitPrice": "Rs. 100", "subtotal": "Rs. 100"},
+      ],
+    },
+    {
+      "title": "Wallet Top-up",
+      "date": "23 March 2026",
+      "time": "10:20 AM",
+      "amount": "+ Rs. 1000",
+      "isDebit": false,
+      "orderId": "TOP-001",
+      "cafeteria": "N/A",
+      "paymentMethod": "Card",
+      "transactionId": "TXN-002",
+      "items": [
+        {"name": "Wallet Top-up", "qty": "1", "unitPrice": "Rs. 1000", "subtotal": "Rs. 1000"},
+      ],
+    },
+    {
+      "title": "Food Purchase",
+      "date": "22 March 2026",
+      "time": "01:15 PM",
+      "amount": "- Rs. 650",
+      "isDebit": true,
+      "orderId": "#1235",
+      "cafeteria": "Cafeteria 1",
+      "paymentMethod": "Cash",
+      "transactionId": "TXN-003",
+      "items": [
+        {"name": "Spicy Koththu", "qty": "1", "unitPrice": "Rs. 650", "subtotal": "Rs. 650"},
+      ],
+    },
+    {
+      "title": "Wallet Top-up",
+      "date": "20 March 2026",
+      "time": "09:00 AM",
+      "amount": "+ Rs. 500",
+      "isDebit": false,
+      "orderId": "TOP-002",
+      "cafeteria": "N/A",
+      "paymentMethod": "Online",
+      "transactionId": "TXN-004",
+      "items": [
+        {"name": "Wallet Top-up", "qty": "1", "unitPrice": "Rs. 500", "subtotal": "Rs. 500"},
+      ],
+    },
+  ];
+
+  void _downloadPaymentReceipt(Map<String, dynamic> payment) {
+    DownloadService.downloadReceipt(
+      context,
+      fileName: 'receipt_${payment['orderId']}.csv',
+      receiptData: {
+        'orderId': payment['orderId'],
+        'date': '${payment['date']} • ${payment['time']}',
+        'cafeteria': payment['cafeteria'],
+        'paymentMethod': payment['paymentMethod'],
+        'transactionId': payment['transactionId'],
+        'amount': payment['amount'],
+        'items': payment['items'] as List<dynamic>,
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -189,7 +270,7 @@ class PaymentHistoryScreen extends StatelessWidget {
       title: "Payment History",
       child: ListView.separated(
         padding: const EdgeInsets.all(20),
-        itemCount: 4,
+        itemCount: _payments.length,
         separatorBuilder: (context, index) => const SizedBox(height: 15),
         itemBuilder: (context, index) => _paymentHistoryItem(index),
       ),
@@ -197,7 +278,8 @@ class PaymentHistoryScreen extends StatelessWidget {
   }
 
   Widget _paymentHistoryItem(int index) {
-    final bool isDebit = index % 2 == 0;
+    final payment = _payments[index];
+    final bool isDebit = payment['isDebit'] as bool;
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -205,27 +287,51 @@ class PaymentHistoryScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.grey[200]!),
       ),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(
-            isDebit ? Icons.arrow_outward : Icons.add_circle_outline,
-            color: isDebit ? Colors.black : Colors.green,
+          Row(
+            children: [
+              Icon(
+                isDebit ? Icons.arrow_outward : Icons.add_circle_outline,
+                color: isDebit ? Colors.black : Colors.green,
+              ),
+              const SizedBox(width: 15),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(payment['title'] as String, style: const TextStyle(fontWeight: FontWeight.bold)),
+                    Text("${payment['date']} • ${payment['time']}", style: TextStyle(color: Colors.grey[600], fontSize: 12)),
+                  ],
+                ),
+              ),
+              Text(
+                payment['amount'] as String,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: isDebit ? Colors.black : Colors.green,
+                ),
+              ),
+            ],
           ),
-          const SizedBox(width: 15),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(isDebit ? "Food Purchase" : "Wallet Top-up", style: const TextStyle(fontWeight: FontWeight.bold)),
-                Text("24 March 2026 • 12:45 PM", style: TextStyle(color: Colors.grey[600], fontSize: 12)),
-              ],
-            ),
-          ),
-          Text(
-            isDebit ? "- Rs. 450" : "+ Rs. 1000",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: isDebit ? Colors.black : Colors.green,
+          const SizedBox(height: 12),
+          Divider(color: Colors.grey[200]),
+          const SizedBox(height: 4),
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton.icon(
+              style: OutlinedButton.styleFrom(
+                side: const BorderSide(color: Color(0xFF9B1C1C)),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                padding: const EdgeInsets.symmetric(vertical: 10),
+              ),
+              onPressed: () => _downloadPaymentReceipt(payment),
+              icon: const Icon(Icons.download, color: Color(0xFF9B1C1C), size: 18),
+              label: const Text(
+                "Download Receipt",
+                style: TextStyle(color: Color(0xFF9B1C1C), fontWeight: FontWeight.bold),
+              ),
             ),
           ),
         ],

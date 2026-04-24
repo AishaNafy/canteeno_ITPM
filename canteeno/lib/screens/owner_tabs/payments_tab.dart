@@ -409,16 +409,23 @@ class _PaymentsTabState extends State<PaymentsTab> {
   void _downloadReceipt(PaymentItem payment) {
     DownloadService.downloadReceipt(
       context,
-      fileName: 'receipt_${payment.id}',
-      receiptData: '''
-Payment Receipt
-Order ID: ${payment.orderId}
-Customer: ${payment.customer}
-Amount: ${payment.amount}
-Method: ${payment.method}
-Date: ${payment.date}
-Status: ${payment.status}
-''',
+      fileName: 'receipt_${payment.id}.csv',
+      receiptData: {
+        'orderId': payment.orderId,
+        'date': payment.date,
+        'cafeteria': 'Canteeno',
+        'paymentMethod': payment.method,
+        'transactionId': payment.id,
+        'amount': payment.amount,
+        'items': [
+          {
+            'name': 'Food Order ${payment.orderId}',
+            'qty': '1',
+            'unitPrice': payment.amount,
+            'subtotal': payment.amount,
+          },
+        ],
+      },
     );
   }
 }
